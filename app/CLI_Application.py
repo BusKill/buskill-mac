@@ -1,5 +1,6 @@
 import subprocess
 import time
+from pathlib import Path
 
 import os
 from os import path
@@ -10,7 +11,9 @@ from sys import platform
 import fnmatch
 
 def _isDevConnected(Device):
-    Dev_Path = "\dev\"" + Device
+    Dev_Base_Dir = '/dev'
+    Dev_Path = os.path.join(Dev_Base_Dir, Device)
+    print(Dev_Path)
     Still_There = os.path.exists(Dev_Path)
     return Still_There
 
@@ -42,7 +45,7 @@ def _printDeviceList(Devices):
         counter = counter + 1
 
 def _getDevName(Devices, number):
-    number = number + 1
+    number = number - 1
     return Devices[number]
 
 def main():
@@ -59,16 +62,21 @@ def main():
     else:
         _printDeviceList(Available_Devices)
         Dev = int(input("Please select option (using number): "))
-        Device_Name = _getDevName(Available_Devices, Dev)
+        if Dev > 0:
+            Device_Name = _getDevName(Available_Devices, Dev)
+        else:
+            print("anything less than 0 is an invalid option.")
     _printTriggerList(Available_Triggers)
     Trig = int(input("Please select option (using number): "))
     Dev_Connected = _isDevConnected(Device_Name)
     if Dev_Connected == True:
-        print(Dev + "is still connected - " + Dev_Connected)
+        print(str(Device_Name) + " is still connected - " + str(Dev_Connected))
+        print("BusKill is now running... Please Leave terminal window live")
+        print("to safetly stop application please use Ctrl+C")
     else:
         print("unexpected error occured")
     while Dev_Connected == True:
-        time.sleep(5)#finish this
+        time.sleep(5)
         if _isDevConnected(Device_Name) == False:
             Dev_Connected == False
             _execute_Trigger(Trig)
@@ -76,3 +84,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+    
