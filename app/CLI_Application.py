@@ -1,88 +1,73 @@
-import subprocess
 import time
-from pathlib import Path
+from BusKill_Core import Controller, Vars, Trigger_Installer
 
-import os
-from os import path
+class BusKill_Application:
+    def __init__(self):
+        pass
 
-import sys
-from sys import platform
+    def _printStartup(self):
+        print("welcome to busKill CLI")
+        print("""
+        By continuing you have agreed you have read the README.md file attached to the repostiory,
 
-import fnmatch
+        we will not be responsible for any data loss.
+        """)
+        time.sleep(1)
 
-def _isDevConnected(Device):
-    Dev_Base_Dir = '/dev'
-    Dev_Path = os.path.join(Dev_Base_Dir, Device)
-    print(Dev_Path)
-    Still_There = os.path.exists(Dev_Path)
-    return Still_There
+    def configure_application():
+        Controller._configureApplication()
+        main()
 
-def _executeTrigger(Trigger):
-    subprocess.call("sudo python ../triggers/" + Trigger)
-    
-def _getDevices():
-    Devices = fnmatch.filter(os.listdir('/dev/'), '*disk*')
-    Usable_Devices = []
-    for Device in Devices:
-        if Device.startswith("disk"):
-            Usable_Devices.append(Device)
-    return Usable_Devices
+    def Operation():
+        Controller._operation()
+        main()
 
-def _getTriggers():
-    Triggers = fnmatch.filter(os.listdir('../triggers/'), '*.py')
-    return Triggers
-    
-def _printTriggerList(Triggers):
-    counter = 1
-    for Trigger in Triggers:
-        print(str(counter) + " - " + Trigger)
-        counter = counter + 1
-
-def _printDeviceList(Devices):
-    counter = 1
-    for Device in Devices:
-        print(str(counter) + " - " + Device)
-        counter = counter + 1
-
-def _getDevName(Devices, number):
-    number = number - 1
-    return Devices[number]
+    def add_new_trigger():
+        Controller._addNewTrigger()
+        main()
 
 def main():
-    print("welcome to busKill CLI")
+    run = True
+    while run = True
+    self._printStartup()
+
+    print("Checking Config...")
+    time.sleep(1)
+if '__name__' == '__main__':
+    main()
+
+def Trigger_Finder():
+    TriggersFound = []
+    rootdir = '\\'
+    for dirpath, files in os.walk(rootdir):
+        for file in files:
+            if 'BusKill' in dirpath:
+                dirs.remove('BusKill')
+            temp_var = fnmatch.filter(file, "TrigInfo.txt")
+            if temp_var is not None:
+                TriggersFound.append(dirpath)
+
+def Add_New_Trigger():
+    print("Searching for Triggers... Please wait ")
+    existing_Triggers = _getTriggers()
+    new_Trigger = Trigger_Finder()
+
+
+def main():
     time.sleep(1)
     print("Please Wait while we gather some information...")
-    Available_Devices = _getDevices()
-    Available_Triggers = _getTriggers()
-    time.sleep(5)
-    print("Ready to go!")
-    time.sleep(2)
-    if len(Available_Devices) == 0:
-        Device_Name = str(input("please enter device name: "))
-    else:
-        _printDeviceList(Available_Devices)
-        Dev = int(input("Please select option (using number): "))
-        if Dev > 0:
-            Device_Name = _getDevName(Available_Devices, Dev)
-        else:
-            print("anything less than 0 is an invalid option.")
-    _printTriggerList(Available_Triggers)
-    Trig = int(input("Please select option (using number): "))
-    Dev_Connected = _isDevConnected(Device_Name)
-    if Dev_Connected == True:
-        print(str(Device_Name) + " is still connected - " + str(Dev_Connected))
-        print("BusKill is now running... Please Leave terminal window live")
-        print("to safetly stop application please use Ctrl+C")
-    else:
-        print("unexpected error occured")
-    while Dev_Connected == True:
-        time.sleep(5)
-        if _isDevConnected(Device_Name) == False:
-            Dev_Connected == False
-            _execute_Trigger(Trig)
-            sys.exit()
+    menu = """
+    1 - Initialise Buskill
+    2 - Add a new Trigger
+    """
+    done = None
+    while done is None:
+        print(menu)
+        option = int(input("Please Choose an Option (using Numbers): "))
+        if option == 1:
+            Operation()
+        elif option == 2:
+            Add_New_Trigger()
 
 if __name__ == '__main__':
     main()
-
-    
