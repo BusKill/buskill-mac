@@ -1,3 +1,0 @@
-###NOTE - This file may be edited Manually. Please do not use spaces, speech marks or any other punctuation and/or special characters. This may cause the application to behave unpredictably. 
-Device:
-Trigger:
