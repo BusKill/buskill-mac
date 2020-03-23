@@ -9,3 +9,10 @@ As seen on [PCMag](https://www.forbes.com/sites/daveywinder/2020/01/03/this-20-u
 
 See https://tech.michaelaltfield.net/2020/01/02/buskill-laptop-kill-cord-dead-man-switch/
 
+# About the Mac Port 
+
+The Mac Port will have 3 applications. this will depend upon the users preference. 
+
+CLI Application - This will mainly be aimed at the power users. and allows easy integration into existing .sh scripts. this version will warn you of certain errors however it will not ask you to confirm every single thing 
+Menu-Based CLI - This is also CLI based. however it will hold the users hand much more. this is to make the application more accessible to users who have some expereince with a command line interface 
+GUI Application (Coming soon) - a big part of the mac community consists of users from journalism to grpahic design to music engineers/ musicians. This will be a fully fledged application which will keep your data safe in an easy-to-use format 
