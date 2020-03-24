@@ -1,4 +1,8 @@
+import os
 import sys
+import fnmatch
+import subprocess
+from pathlib import Path
 
 def print_help():
     print(
@@ -34,17 +38,21 @@ def Validation(Device, Trigger):
     return Dev and Trig
 
 def Check_Device(Device):
-    function = None
+    if os.path.exists("/dev/"+Device) == True:
+        return True
+    else:
+        return False
 
 def Execute_Trigger(Trigger):
-    function = None
+    subprocess.call("sudo python /Triggers/" + Trigger + "/Trigger.py")
 
 def Normal_Operation(Device, Trigger):
     print("BusKill is now running")
     Triggered = False
-    while Triggered = False:
+    while Triggered == False:
         if Check_Device(Device) == False:
             Execute_Trigger(Trigger)
+            Triggered = True
         time.sleep(5)
 
 def Save_Configuration(Device, Trigger):
@@ -68,7 +76,7 @@ def Load_Configuration(index):
 
 def Clear_Config():
     if os.path.exists("config.txt") == False:
-        print("No Config find!! Nothing to clear")
+        print("No Config found!! Nothing to clear")
     else:
         os.remove("config.txt")
         if os.path.exists("config.txt"):
@@ -76,35 +84,56 @@ def Clear_Config():
         else:
             print("Config Cleared!")
 
-def List_Device(): #not complete
-    df = subprocess.check_output("system_profiler SPUSBDataType -xml -detailLevel mini", shell=True)
-    if sys.version_info[0] == 2:
-        df = plistlib.readPlistFromString(df)
-    else:
-        df = plistlib.loads(df)
-    List = XML_Parser(df)
-    return List
+def List_Device():
+    Devices = os.listdir("/dev/")
+    Disk_Devices = []
+    for Device in Devices:
+        if fnmatch.fnmatch(Device, "*disk*"):
+            Disk_Devices.append(Device)
 
-def XML_Parser(XML):
-    function = None
-    List = []
-    return List
+    counter = 0
+    for Device in Disk_Devices:
+        counter = counter + 1
+        print(str(counter) + " - " + Device)
 
-def List_Trigger():
-    Directories = os.listdir("../triggers/")
-    for dir in Directories:
-        Trigger_Data = fnmatch.filter(os.listdir(os.path.join("../triggers/", dir)), "TrigInfo.txt")
-        if Trigger_Data is not None:
-            Trigger.append(dir)
-    return Directories
+#def List_Device(): #not complete
+#    df = subprocess.check_output("system_profiler SPUSBDataType -xml -detailLevel mini", shell=True)
+#    if sys.version_info[0] == 2:
+#        df = plistlib.readPlistFromString(df)
+#    else:
+#        df = plistlib.loads(df)
+#    List = XML_Parser(df)
+#    return List
+
+#def XML_Parser(XML):
+#    function = None
+#    List = []
+#    return List
+
+def List_Trigger(): # Doesn't work
+    Triggers = []
+    dirlist = os.listdir("../Triggers")
+    for dir in dirlist:
+        if os.path.isdir("../Triggers/"+dir) == True:
+            Triggers.append(dir)
+
+    counter = 0
+    for Trigger in Triggers:
+        counter = counter + 1
+        print(str(counter) + " - " + Trigger)
 
 def Query_Trigger():
     function = None
 
-def Install_Trigger():
-    function = None
-
-def Main()(args):
+def Main(args):
+    Device = False
+    Trigger = False
+    Query = False
+    Config = False
+    Clear_Conf = False
+    help = False
+    List_Trig = False
+    List_Dev = False
     for index, arg in enumerate(args):
         if arg.upper() == "-T":
             Trigger = index
@@ -114,16 +143,18 @@ def Main()(args):
             Device = index
         elif arg.upper() == "-SC":
             Save_Conf = True
-        elif arg.upper() == "-C"
+        elif arg.upper() == "-C":
             Config = True
         elif arg.upper() == "-CC":
-            Clear_Config = True
+            Clear_Conf = True
         elif arg.upper() == "-H":
             help = True
         elif arg.upper() == "-LT":
-            List_Trigger = True
+            List_Trig = True
+        elif arg.upper() == "-LD":
+            List_Dev = True
 
-    if Device and Trigger != None:
+    if Device and Trigger == True:
         Device = args[Device + 1]
         Trigger = args[Trigger + 1]
         if Validation() == True:
@@ -131,32 +162,35 @@ def Main()(args):
                 Save_Configuration(Device, Trigger)
             Normal_Operation(Device, Trigger)
 
-    if Query != None:
+    if Query == True:
         Trigger = args[Query+1]
-        with open("/Triggers/"+Trigger+"TriggerInfo.txt") as InfoFile:
+        with open("../Triggers/"+Trigger+"/TriggerInfo.txt") as InfoFile:
             print(InfoFile.readline())
+        sys.exit()
 
-    if Install == True:
-        #search and install trigger
-        function = None
-
-    if Config = True:
+    if Config == True:
         #gets data from config
         Device = Load_Configuration(0)
         Trigger = Load_Configuration(1)
         if Validation() == True:
             Normal_Operation(Device, Trigger)
+        sys.exit()
 
-    if Clear_Config == True:
-        #Delete Config File
-        function = None
+    if Clear_Conf == True:
+        Clear_Config()
+        sys.exit()
 
-    if List_Trigger = True:
-        for child in os.listdir("triggers/")
-            print(child)
+    if List_Trig == True:
+        List_Trigger()
+        sys.exit()
+
+    if List_Dev == True:
+        List_Device()
+        sys.exit()
 
     if help == True:
         print_help()
+        sys.exit()
 
     else:
         print_help()
