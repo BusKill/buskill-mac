@@ -3,7 +3,22 @@ import sys
 def print_help():
     print(
     """
-    TEXT WILL GO HERE
+    For Normal Usage:
+        BusKill.py -D Device_Name -T Trigger_Name
+
+    triggers
+        -T  -- USed to define the Trigger Buskill is configured to use
+        -Q  -- Reads the TrigInfo.txt, this file contains information about the Trigger
+        -LT -- Lists Installed Triggers on the system
+    Devices
+        -D  -- Used to define the Device Buskill is configured to use
+        -LD -- Creates a List for available Devices within MacOSX
+    Configuration
+        -SC -- Creates a configuration File. Use -SC at the end of normal usage to save the config
+        -CC -- Clears the Configuration File created by -SC
+        -C  -- Uses a Configuration File, Must be created by -SC
+    other
+        -H  -- Reads the Help File
     """)
 
 def Validation(Device, Trigger):
@@ -43,14 +58,23 @@ def Save_Configuration(Device, Trigger):
             config.writeline("Trigger: "+Trigger)
 
 
-def Load_Configuration():
-    list = []
-    list.append(Device)
-    list.append(Trigger)
-    return list
+def Load_Configuration(index):
+    with open("config.txt", "r") as config:
+        list = []
+        list.append(config.readline(1).split(":")[1])
+        list.append(config.readline(2).split(":")[2])
+
+    return list[index]
 
 def Clear_Config():
-    function = None
+    if os.path.exists("config.txt") == False:
+        print("No Config find!! Nothing to clear")
+    else:
+        os.remove("config.txt")
+        if os.path.exists("config.txt"):
+            print("Internal Error, Please Try again (or raise a user story on Github)")
+        else:
+            print("Config Cleared!")
 
 def List_Device(): #not complete
     df = subprocess.check_output("system_profiler SPUSBDataType -xml -detailLevel mini", shell=True)
@@ -86,8 +110,6 @@ def Main()(args):
             Trigger = index
         elif arg.upper() == "-Q":
             Query = index
-        elif arg.upper() == "-I"
-            Install = True
         elif arg.upper() == "-D":
             Device = index
         elif arg.upper() == "-SC":
@@ -120,8 +142,8 @@ def Main()(args):
 
     if Config = True:
         #gets data from config
-        Device = None # will equal something
-        Trigger = None # will equal something
+        Device = Load_Configuration(0)
+        Trigger = Load_Configuration(1)
         if Validation() == True:
             Normal_Operation(Device, Trigger)
 
@@ -139,22 +161,4 @@ def Main()(args):
     else:
         print_help()
 
-
 Main(sys.argv)
-'''
-options
-    triggers
-        -T (needed for normal operation(Defines Trigger to be used)) untested
-        -Q (Queries Trigger immediatly after (if empty is an error)) untested
-        -LT (Lists available/Installed Triggers) untested
-        -I (Installs a new Trigger)-in app(still not coded)
-    Devices
-        -D (needed for normal operation(Defines Device to be used)) untested
-        -LD (Lists available devices on the system) -in app(still not coded)
-    Configuration
-        -SC (Creates a configuration file)
-        -CC (Deletes Config File) -in app(still not coded)
-        -C (Reads a configuration file) -in app(still not coded)
-    other
-        -H (Help File)
-'''
