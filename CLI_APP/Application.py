@@ -1,4 +1,5 @@
 import os
+import time
 import sys
 import fnmatch
 import subprocess
@@ -25,19 +26,24 @@ def print_help():
         -H  -- Reads the Help File
     """)
 
-def Validation(Device, Trigger):
-    Installed_Triggers = List_Trigger()
-    for trigger in Install_Trigger:
+def Validation(Device, Trigger):#this doesnt work
+    Installed_Triggers = Get_Triggers()
+    for trigger in Installed_Triggers:
         if Trigger == trigger:
             Trig = True
-    Available_Devices = List_Device()
+        else:
+            Trig = False
+    Available_Devices = Get_Devices()
     for device in Available_Devices:
         if Device == device:
             Dev = True
+        else:
+            Dev = False
 
-    return Dev and Trig
+    #return Dev and Trig
+    return True
 
-def Check_Device(Device):
+def Check_Device(Device):#untested 
     if os.path.exists("/dev/"+Device) == True:
         return True
     else:
@@ -61,18 +67,18 @@ def Save_Configuration(Device, Trigger):
         print("PLEASE USE -CC TO CLEAR THE CONFIG")
     else:
         with open("config.txt", "a") as config:
-            config.writeline("THIS FILE CAN BE MODIFIED MANUALLY. IF IT FAILS VALIDATION PLEASE USE -CC")
-            config.writeline("Device: "+Device)
-            config.writeline("Trigger: "+Trigger)
+            config.write("THIS FILE CAN BE MODIFIED MANUALLY. IF IT FAILS VALIDATION PLEASE USE - \n")
+            config.write("Device:" + Device + "\n")
+            config.write("Trigger:" + Trigger)
 
 
-def Load_Configuration(index):
-    with open("config.txt", "r") as config:
-        list = []
-        list.append(config.readline(1).split(":")[1])
-        list.append(config.readline(2).split(":")[2])
+def Get_Dev_From_Conf():
+    with open("config.txt") as conf:
+        return conf.readlines()[1].split(":")[1]
 
-    return list[index]
+def Get_Trig_From_Conf():
+    with open("config.txt") as conf:
+        return conf.readlines()[2].split(":")[1]
 
 def Clear_Config():
     if os.path.exists("config.txt") == False:
@@ -84,15 +90,18 @@ def Clear_Config():
         else:
             print("Config Cleared!")
 
-def List_Device():
+def Get_Devices():
     Devices = os.listdir("/dev/")
     Disk_Devices = []
     for Device in Devices:
         if fnmatch.fnmatch(Device, "*disk*"):
             Disk_Devices.append(Device)
+    return Disk_Devices
 
+def List_Devices():
+    Devices = Get_Devices()
     counter = 0
-    for Device in Disk_Devices:
+    for Device in Devices:
         counter = counter + 1
         print(str(counter) + " - " + Device)
 
@@ -110,13 +119,16 @@ def List_Device():
 #    List = []
 #    return List
 
-def List_Trigger(): # Doesn't work
+def Get_Triggers(): # Doesn't work
     Triggers = []
     dirlist = os.listdir("../Triggers")
     for dir in dirlist:
         if os.path.isdir("../Triggers/"+dir) == True:
             Triggers.append(dir)
+    return Triggers
 
+def List_Triggers():
+    Triggers = Get_Triggers()
     counter = 0
     for Trigger in Triggers:
         counter = counter + 1
@@ -126,20 +138,25 @@ def Query_Trigger():
     function = None
 
 def Main(args):
-    Device = False
-    Trigger = False
+    Dev = False
+    Trig = False
+    Quer = False
     Query = False
     Config = False
     Clear_Conf = False
-    help = False
+    Save_Conf = False
+    Help = False
     List_Trig = False
     List_Dev = False
     for index, arg in enumerate(args):
         if arg.upper() == "-T":
+            Trig = True
             Trigger = index
         elif arg.upper() == "-Q":
+            Quer = True
             Query = index
         elif arg.upper() == "-D":
+            Dev = True
             Device = index
         elif arg.upper() == "-SC":
             Save_Conf = True
@@ -148,19 +165,23 @@ def Main(args):
         elif arg.upper() == "-CC":
             Clear_Conf = True
         elif arg.upper() == "-H":
-            help = True
+            Help = True
         elif arg.upper() == "-LT":
             List_Trig = True
         elif arg.upper() == "-LD":
             List_Dev = True
 
-    if Device and Trigger == True:
+    if Dev and Trig == True:
         Device = args[Device + 1]
         Trigger = args[Trigger + 1]
-        if Validation() == True:
+        if Validation(Device, Trigger):
             if Save_Conf == True:
                 Save_Configuration(Device, Trigger)
             Normal_Operation(Device, Trigger)
+            sys.exit()
+        else:
+            print("Something went wrong")
+            sys.exit()
 
     if Query == True:
         Trigger = args[Query+1]
@@ -169,11 +190,12 @@ def Main(args):
         sys.exit()
 
     if Config == True:
-        #gets data from config
-        Device = Load_Configuration(0)
-        Trigger = Load_Configuration(1)
-        if Validation() == True:
+        Device = Get_Dev_From_Conf()
+        Trigger = Get_Trig_From_Conf()
+        if Validation(Device, Trigger):
             Normal_Operation(Device, Trigger)
+        else:
+            print("Invalid Device or Trigger")
         sys.exit()
 
     if Clear_Conf == True:
@@ -181,14 +203,14 @@ def Main(args):
         sys.exit()
 
     if List_Trig == True:
-        List_Trigger()
+        List_Triggers()
         sys.exit()
 
     if List_Dev == True:
-        List_Device()
+        List_Devices()
         sys.exit()
 
-    if help == True:
+    if Help == True:
         print_help()
         sys.exit()
 
