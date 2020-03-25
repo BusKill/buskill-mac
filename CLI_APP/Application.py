@@ -43,14 +43,14 @@ def Validation(Device, Trigger):#this doesnt work
     #return Dev and Trig
     return True
 
-def Check_Device(Device):#untested 
+def Check_Device(Device):#untested
     if os.path.exists("/dev/"+Device) == True:
         return True
     else:
         return False
 
 def Execute_Trigger(Trigger):
-    subprocess.call("sudo python /Triggers/" + Trigger + "/Trigger.py")
+    subprocess.Popen("sudo python ../Triggers/" + Trigger + "/Trigger.py")
 
 def Normal_Operation(Device, Trigger):
     print("BusKill is now running")
@@ -218,3 +218,4 @@ def Main(args):
         print_help()
 
 Main(sys.argv)
+
