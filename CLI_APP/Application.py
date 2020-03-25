@@ -29,19 +29,19 @@ def print_help():
 def Validation(Device, Trigger):#this doesnt work
     Installed_Triggers = Get_Triggers()
     for trigger in Installed_Triggers:
-        if Trigger == trigger:
+        if Trigger.strip() == trigger:
             Trig = True
         else:
             Trig = False
+
     Available_Devices = Get_Devices()
     for device in Available_Devices:
-        if Device == device:
+        if Device.strip() == device:
             Dev = True
         else:
             Dev = False
 
-    #return Dev and Trig
-    return True
+    return Dev and Trig
 
 def Check_Device(Device):#untested
     if os.path.exists("/dev/"+Device) == True:
@@ -50,16 +50,19 @@ def Check_Device(Device):#untested
         return False
 
 def Execute_Trigger(Trigger):
-    subprocess.Popen("sudo python ../Triggers/" + Trigger + "/Trigger.py")
+    subprocess.call("python ../Triggers/" + Trigger + "/Trigger.py", shell = True)
 
 def Normal_Operation(Device, Trigger):
     print("BusKill is now running")
     Triggered = False
-    while Triggered == False:
-        if Check_Device(Device) == False:
-            Execute_Trigger(Trigger)
-            Triggered = True
-        time.sleep(5)
+    try:
+        while Triggered == False:
+            if Check_Device(Device) == False:
+                Execute_Trigger(Trigger)
+                Triggered = True
+                time.sleep(5)
+    except KeyboardInterrupt:
+        print("\n BusKill Stopped")
 
 def Save_Configuration(Device, Trigger):
     if os.path.exists("config.txt") == True:
@@ -69,7 +72,7 @@ def Save_Configuration(Device, Trigger):
         with open("config.txt", "a") as config:
             config.write("THIS FILE CAN BE MODIFIED MANUALLY. IF IT FAILS VALIDATION PLEASE USE - \n")
             config.write("Device:" + Device + "\n")
-            config.write("Trigger:" + Trigger)
+            config.write("Trigger:" + Trigger + "\n")
 
 
 def Get_Dev_From_Conf():
@@ -95,7 +98,11 @@ def Get_Devices():
     Disk_Devices = []
     for Device in Devices:
         if fnmatch.fnmatch(Device, "*disk*"):
-            Disk_Devices.append(Device)
+            if Device.startswith("r") == False:
+                if fnmatch.fnmatch(Device, "*isk*s*") == False:
+                    if Device.endswith("1") == False:
+                        if Device.endswith("0") == False:
+                            Disk_Devices.append(Device)
     return Disk_Devices
 
 def List_Devices():
@@ -190,13 +197,14 @@ def Main(args):
         sys.exit()
 
     if Config == True:
-        Device = Get_Dev_From_Conf()
-        Trigger = Get_Trig_From_Conf()
+        Device = Get_Dev_From_Conf().strip()
+        Trigger = Get_Trig_From_Conf().strip()
         if Validation(Device, Trigger):
             Normal_Operation(Device, Trigger)
+            sys.exit()
         else:
             print("Invalid Device or Trigger")
-        sys.exit()
+            sys.exit()
 
     if Clear_Conf == True:
         Clear_Config()
@@ -218,4 +226,3 @@ def Main(args):
         print_help()
 
 Main(sys.argv)
-
