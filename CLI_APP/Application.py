@@ -26,7 +26,7 @@ def print_help():
         -H  -- Reads the Help File
     """)
 
-def Validation(Device, Trigger):#this doesnt work
+def Validation(Device, Trigger):
     Installed_Triggers = Get_Triggers()
     for trigger in Installed_Triggers:
         if Trigger.strip() == trigger:
@@ -43,7 +43,7 @@ def Validation(Device, Trigger):#this doesnt work
 
     return Dev and Trig
 
-def Check_Device(Device):#untested
+def Check_Device(Device):
     if os.path.exists("/dev/"+Device) == True:
         return True
     else:
@@ -111,22 +111,8 @@ def List_Devices():
     for Device in Devices:
         counter = counter + 1
         print(str(counter) + " - " + Device)
-
-#def List_Device(): #not complete
-#    df = subprocess.check_output("system_profiler SPUSBDataType -xml -detailLevel mini", shell=True)
-#    if sys.version_info[0] == 2:
-#        df = plistlib.readPlistFromString(df)
-#    else:
-#        df = plistlib.loads(df)
-#    List = XML_Parser(df)
-#    return List
-
-#def XML_Parser(XML):
-#    function = None
-#    List = []
-#    return List
-
-def Get_Triggers(): # Doesn't work
+        
+def Get_Triggers():
     Triggers = []
     dirlist = os.listdir("../Triggers")
     for dir in dirlist:
