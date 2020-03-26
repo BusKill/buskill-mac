@@ -9,6 +9,30 @@ As seen on [PCMag](https://www.forbes.com/sites/daveywinder/2020/01/03/this-20-u
 
 See https://tech.michaelaltfield.net/2020/01/02/buskill-laptop-kill-cord-dead-man-switch/
 
+# BusKill CLI for MAC
+
+For the Tar File Please visit my [Google Drive](https://drive.google.com/file/d/1B7MakNrxXJQUI3989Z1r8iHH7cX1L6Q7/view?usp=sharing)
+
+For Setup:
+1. Unzip The TAR Package 
+tar -xf BusKill_Package.tar.gz
+2. Move the Folder called "BusKill_CLI" to "~Applications/"
+
+cd ~/Downloads/BusKill_Package
+mv BusKill_CLI ~/Application/
+
+3. Make the BusKill_CLI.py executable 
+
+cd ~/Application/BusKill_CLI
+chmod a+x BusKill_CLI.py 
+
+4. Add to the PATHS Folder (Allowing the Application to ran from anywhere) 
+
+sudo nano /etc/paths
+
+add the following line to the end of the file
+~/Applications/BusKill_CLI
+
 # About the Mac Port 
 
 The Mac Port will have 3 applications. this will depend upon the users preference. 
