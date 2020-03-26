@@ -12,6 +12,7 @@ See https://tech.michaelaltfield.net/2020/01/02/buskill-laptop-kill-cord-dead-ma
 # BusKill CLI for MAC
 
 For the Tar File Please visit my [Google Drive](https://drive.google.com/file/d/1B7MakNrxXJQUI3989Z1r8iHH7cX1L6Q7/view?usp=sharing)
+or you can download the source code from this repository 
 
 For Setup:
 1. Unzip The TAR Package 
