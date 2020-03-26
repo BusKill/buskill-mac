@@ -15,8 +15,10 @@ For the Tar File Please visit my [Google Drive](https://drive.google.com/file/d/
 or you can download the source code from this repository 
 
 For Setup:
-1. Unzip The TAR Package 
+1. Unzip The TAR Package
+
 tar -xf BusKill_Package.tar.gz
+
 2. Move the Folder called "BusKill_CLI" to "~Applications/"
 
 cd ~/Downloads/BusKill_Package
