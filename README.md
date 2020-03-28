@@ -11,7 +11,7 @@ See https://tech.michaelaltfield.net/2020/01/02/buskill-laptop-kill-cord-dead-ma
 
 # BusKill CLI for MAC
 
-For the Tar File Please visit my [Google Drive](https://drive.google.com/file/d/1ejiLjh9CmOfSe8bC265WQV79adJ4qzGp/view?usp=sharing)
+For the Tar File Please visit my [Google Drive](https://drive.google.com/file/d/1EUmHT_cJTqGJw9Al6auKzTWHoBF1koza/view?usp=sharing)
 or you can download the source code from this repository 
 
 For Setup:
@@ -24,7 +24,7 @@ tar -xf BusKill_Package.tar.gz
 cd ~/Downloads/BusKill_Package
 mv BusKill /Applications/
 
-3. Make the BusKill_CLI.py executable 
+3. Make the buskill.py executable 
 
 cd /Applications/BusKill
 chmod a+x buskill.py 
