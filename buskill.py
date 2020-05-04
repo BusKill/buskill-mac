@@ -29,7 +29,7 @@ def print_help():
 
 def Write_Log(LEVEL, MESSAGE):
     with open("log.txt", "a") as logfile:
-        logfile.write(str(datetime.date.today().ctime()) + " - " +  LEVEL + " - " + MESSAGE + "\n")
+        logfile.write(str(datetime.datetime.now().ctime()) + " - " +  LEVEL + " - " + MESSAGE + "\n")
 
 def Find_Run_Path():
     dirname = os.path.split(os.path.abspath(__file__))
