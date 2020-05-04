@@ -27,20 +27,16 @@ def print_help():
         -H  -- Reads the Help File
     """)
 
-def Write_Log(LEVEL, MESSAGE):
-    with open("log.txt", "a") as logfile:
+def Find_Run_Path():
+    dirname = os.path.abspath(__file__).split("/")
+    del dirname[len(dirname) - 1]
+    return "/".join(dirname)
+
+def Write_Log(LOG_LOCATION, LEVEL, MESSAGE):
+    with open(LOG_LOCATION, "a") as logfile:
         logfile.write(str(datetime.datetime.now().ctime()) + " - " +  LEVEL + " - " + MESSAGE + "\n")
 
-def Find_Run_Path():
-    dirname = os.path.split(os.path.abspath(__file__))
-    full_path=dirname.split("/")
-    length = len(full_path)
-    del full_path[length-1]
-    return "/".join(full_path)
-
-def Validation(Device, Trigger):
-    print(Device)
-    print(Trigger)
+def Validation(LOG_LOCATION, Device, Trigger):
     for trigger in Get_Triggers():
         if Trigger.strip() == trigger:
             Trig = True
@@ -49,9 +45,9 @@ def Validation(Device, Trigger):
             Trig = False
 
     if Trig != True:
-        Write_Log("ERROR", Trigger + " was not found")
+        Write_Log(LOG_LOCATION, "ERROR", Trigger + " was not found")
     else:
-        Write_Log("INFO", Trigger + " was found")
+        Write_Log(LOG_LOCATION, "INFO", Trigger + " was found")
 
     for device in Get_Devices():
         if Device.strip() == device:
@@ -60,59 +56,59 @@ def Validation(Device, Trigger):
     try:
         if Dev != True:
             Dev = False
-            Write_Log("ERROR", Device + " was not found")
+            Write_Log(LOG_LOCATION, "ERROR", Device + " was not found")
         else:
-            Write_Log("INFO", Device + " was found")
+            Write_Log(LOG_LOCATION, "INFO", Device + " was found")
     except UnboundLocalError:
         print("Device was not found.")
-        Write_Log("ERROR", Device + " was not found")
+        Write_Log(LOG_LOCATION, "ERROR", Device + " was not found")
         return
 
     return (Dev and Trig)
 
-def Check_Device(Device):
+def Check_Device(LOG_LOCATION, Device):
     if os.path.exists("/dev/"+Device) == True:
         return True
     else:
-        Write_Log("INFO", Device + " has been removed")
+        Write_Log(LOG_LOCATION, "INFO", Device + " has been removed")
         return False
 
-def Execute_Trigger(Trigger):
+def Execute_Trigger(LOG_LOCATION, Trigger):
     try:
-        Write_Log("INFO", "Device Removal Detected!" + Trigger + "Executing")
+        Write_Log(LOG_LOCATION, "INFO", "Device Removal Detected!" + Trigger + " Executing")
         subprocess.call("python Trigger.py", shell = True)
 
     except IOError:
-        Write_Log("ERROR", Trigger + " has not been found. Application Error")
+        Write_Log(LOG_LOCATION, "ERROR", Trigger + " has not been found. Application Error")
         print("Something went wrong!")
 
-def Normal_Operation(Device, Trigger):
+def Normal_Operation(LOG_LOCATION, Device, Trigger):
     os.chdir("Triggers/"+Trigger+"/")
     print("BusKill is now running")
     Triggered = False
     try:
         while Triggered == False:
-            if Check_Device(Device) == False:
-                Execute_Trigger(Trigger)
-                Write_Log("INFO", "BusKill executed")
+            if Check_Device(LOG_LOCATION, Device) == False:
+                Execute_Trigger(LOG_LOCATION ,Trigger)
+                Write_Log(LOG_LOCATION, "INFO", "BusKill executed")
                 Triggered = True
                 time.sleep(5)
     except KeyboardInterrupt:
-        Write_Log("INFO", "BusKill was stopped via a KeyboardInterrupt")
+        Write_Log(LOG_LOCATION, "INFO", "BusKill was stopped via a KeyboardInterrupt")
         print("\n BusKill Stopped")
 
-def Save_Configuration(Device, Trigger):
+def Save_Configuration(LOG_LOCATION, Device, Trigger):
     if os.path.exists("config.txt") == True:
-        Write_Log("ERROR", "Configuration Change attempted, failed due to Configuration existing")
+        Write_Log(LOG_LOCATION, "ERROR", "Configuration Change attempted, failed due to Configuration existing")
         print("CONFIG ALREADY EXISTS.")
         print("PLEASE USE -CC TO CLEAR THE CONFIG")
-        Write_Log("WARNING", "Attempted config save. However, already existed")
+        Write_Log(LOG_LOCATION, "WARNING", "Attempted config save. However, already existed")
     else:
         with open("config.txt", "a") as config:
             config.write("THIS FILE CAN BE MODIFIED MANUALLY. IF IT FAILS VALIDATION PLEASE USE - \n")
             config.write("Device:" + Device + "\n")
             config.write("Trigger:" + Trigger + "\n")
-        Write_Log("INFO", "Config saved.")
+        Write_Log(LOG_LOCATION, "INFO", "Config saved.")
 
 
 def Get_Dev_From_Conf():
@@ -123,18 +119,18 @@ def Get_Trig_From_Conf():
     with open("config.txt") as conf:
         return conf.readlines()[2].split(":")[1]
 
-def Clear_Config():
+def Clear_Config(LOG_LOCATION):
     if os.path.exists("config.txt") == False:
         print("No Config found!! Nothing to clear")
-        Write_Log("INFO", "Config Removal attempted, not found")
+        Write_Log(LOG_LOCATION, "INFO", "Config Removal attempted, not found")
     else:
         os.remove("config.txt")
         if os.path.exists("config.txt"):
             print("Internal Error, Please Try again (or raise a user story on Github)")
-            Write_Log("ERROR", "BusKill could not remove the config file")
+            Write_Log(LOG_LOCATION, "ERROR", "BusKill could not remove the config file")
         else:
             print("Config Cleared!")
-            Write_Log("WARNING", "Configuration Removed")
+            Write_Log(LOG_LOCATION, "WARNING", "Configuration Removed")
 
 
 def Get_Devices():
@@ -178,10 +174,10 @@ def Query_Trigger(Trigger):
             print(line)
 
 def Main(args):
-    dirname, filename = os.path.split(os.path.abspath(__file__))
-    print(dirname)
+    dirname = Find_Run_Path()
+    LOG_LOCATION = dirname + "/log.txt"
+    #remeber to change where all the write logs are pointing to 
     os.chdir(dirname)
-    print(os.getcwd())
     Dev = False
     Trig = False
     Quer = False
@@ -218,16 +214,16 @@ def Main(args):
     if Dev and Trig == True:
         Device = args[Device + 1]
         Trigger = args[Trigger + 1]
-        if Validation(Device, Trigger):
+        if Validation(LOG_LOCATION, Device, Trigger):
             if Save_Conf == True:
-                Save_Configuration(Device, Trigger)
-            Normal_Operation(Device, Trigger)
+                Save_Configuration(LOG_LOCATION, Device, Trigger)
+            Normal_Operation(LOG_LOCATION, Device, Trigger)
             sys.exit()
         else:
             print("Something went wrong")
             sys.exit()
 
-    if Query == True:
+    if Quer == True:
         Trigger = args[Query+1]
         with open("/Triggers/"+Trigger+"/TriggerInfo.txt") as InfoFile:
             print(InfoFile.readline())
@@ -236,17 +232,17 @@ def Main(args):
     if Config == True:
         Device = Get_Dev_From_Conf().strip()
         Trigger = Get_Trig_From_Conf().strip()
-        if Validation(Device, Trigger):
-            Write_Log("INFO", "Validation passed for " + Device + " and " + Trigger)
-            Normal_Operation(Device, Trigger)
+        if Validation(LOG_LOCATION, Device, Trigger):
+            Write_Log(LOG_LOCATION, "INFO", "Validation passed for " + Device + " and " + Trigger)
+            Normal_Operation(LOG_LOCATION, Device, Trigger)
             sys.exit()
         else:
-            Write_Log("ERROR", "Validation failed for " + Device + " and " + Trigger)
+            Write_Log(LOG_LOCATION, "ERROR", "Validation failed for " + Device + " and " + Trigger)
             print("Invalid Device or Trigger")
             sys.exit()
 
     if Clear_Conf == True:
-        Clear_Config()
+        Clear_Config(LOG_LOCATION)
         sys.exit()
 
     if List_Trig == True:

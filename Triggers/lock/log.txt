@@ -1,3 +1,0 @@
-Mon May  4 00:00:00 2020 - INFO - BusKill was stopped via a KeyboardInterrupt
-Mon May  4 00:00:00 2020 - INFO - Device Removal Detected!lockExecuting
-Mon May  4 00:00:00 2020 - INFO - Device Removal Detected!lockExecuting
