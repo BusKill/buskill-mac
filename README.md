@@ -11,35 +11,12 @@ See https://tech.michaelaltfield.net/2020/01/02/buskill-laptop-kill-cord-dead-ma
 
 # BusKill CLI for MAC
 
-For the Tar File Please visit my [Google Drive](https://drive.google.com/file/d/1EUmHT_cJTqGJw9Al6auKzTWHoBF1koza/view?usp=sharing)
-or you can download the source code from this repository 
+you can download using either git clone or download via HTTPS
 
 For Setup:
-1. Unzip The TAR Package
-
-tar -xf BusKill_Package.tar.gz
-
-2. Move the Folder called "BusKill" to "~Applications/"
-
-cd ~/Downloads/BusKill_Package
-mv BusKill /Applications/
-
-3. Make the buskill.py executable 
-
-cd /Applications/BusKill
-chmod a+x buskill.py 
-
-4. Add to the PATHS Folder (Allowing the Application to ran from anywhere) 
-
-sudo nano /etc/paths
-
-add the following line to the end of the file
-/Applications/BusKill
+NEW GUIDE COMING SOON
 
 # About the Mac Port 
 
-The Mac Port will have 2 applications. this will depend upon the users preference. 
-
-CLI Application - This will mainly be aimed at the power users. and allows easy integration into existing .sh scripts. this version will warn you of certain errors however it will not ask you to confirm every single thing 
-
-GUI Application (Coming soon) - a big part of the mac community consists of users from journalism to graphic design to music engineers/ musicians. This will be a fully fledged application which will keep your data safe in an easy-to-use format 
+The Mac Port CLI allows BusKill to be used in a lightweight and portable way 
+It does rely on machines having Python and other depenencies installed and the code will still need to be on the machine itself. However it can be ran from everywhere and requires no admin credentials so execute 
