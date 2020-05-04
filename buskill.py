@@ -32,7 +32,9 @@ def Write_Log(LEVEL, MESSAGE):
         logfile.write(str(datetime.date.today().ctime()) + " - " +  LEVEL + " - " + MESSAGE + "\n")
 
 def Find_Run_Path():
-    full_path=sys.argv[0].split("/")
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    print(dirname)
+    full_path=dirname.split("/")
     length = len(full_path)
     del full_path[length-1]
     return "/".join(full_path)
@@ -68,16 +70,15 @@ def Check_Device(Device):
     if os.path.exists("/dev/"+Device) == True:
         return True
     else:
-        return False
         Write_Log("INFO", Device + " has been removed")
+        return False
 
 def Execute_Trigger(Trigger):
-    os.chdir(Find_Run_Path() + "/Triggers/" + Trigger)
     try:
         Write_Log("INFO", "Device Removal Detected!" + Trigger + "Executing")
         subprocess.call("python Trigger.py", shell = True)
 
-    except IOError, OSError:
+    except IOError:
         Write_Log("ERROR", Trigger + " has not been found. Application Error")
         print("Something went wrong!")
 
@@ -171,7 +172,10 @@ def Query_Trigger():
             print(line)
 
 def Main(args):
-    os.chdir(Find_Run_Path())
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    print(dirname)
+    os.chdir(dirname)
+    print(os.getcwd())
     Dev = False
     Trig = False
     Quer = False
