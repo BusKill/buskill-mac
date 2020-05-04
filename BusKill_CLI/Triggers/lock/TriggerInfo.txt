@@ -1,8 +1,0 @@
-The Lock Trigger is part of the BusKill project and complies to the same license agreement 
-
-The Lock trigger will lock your system when a USB device configured is removed. 
-It will not cause loss of power or forcably shutdown your machine 
-
-This is to stop your device being stolen and as such the data hidden in the machine. This software is not designed to protect your system for brute force. if you are have sensitive data on the machine and believe it required extra protection please use the "Shutdown" Trigger.
-
-Enjoy BusKill =) 
