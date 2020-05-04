@@ -1,7 +1,0 @@
-Trigger is part of the BusKill Project and complies with the term of its license agreement 
- 
-The Shutdown Trigger will forcably turn off your system. If FileVault or any other Third Party Startup encryption is in place this will activate as normal.
-It is reccomended you check with your system administrator before using this Trigger as it has only been tested on personal systems. 
-The Developer will not take responsibility for any damaged caused. and if concerned you should instead consider using the "Lock" Trigger instead. 
-
-Enjoy BusKill =) 
