@@ -94,6 +94,7 @@ def Normal_Operation(Device, Trigger):
         while Triggered == False:
             if Check_Device(Device) == False:
                 Execute_Trigger(Trigger)
+                Write_Log("INFO", "BusKill executed")
                 Triggered = True
                 time.sleep(5)
     except KeyboardInterrupt:
@@ -102,6 +103,7 @@ def Normal_Operation(Device, Trigger):
 
 def Save_Configuration(Device, Trigger):
     if os.path.exists("config.txt") == True:
+        Write_Log("ERROR", "Configuration Change attempted, failed due to Configuration existing")
         print("CONFIG ALREADY EXISTS.")
         print("PLEASE USE -CC TO CLEAR THE CONFIG")
         Write_Log("WARNING", "Attempted config save. However, already existed")
@@ -235,9 +237,11 @@ def Main(args):
         Device = Get_Dev_From_Conf().strip()
         Trigger = Get_Trig_From_Conf().strip()
         if Validation(Device, Trigger):
+            Write_Log("INFO", "Validation passed for " + Device + " and " + Trigger)
             Normal_Operation(Device, Trigger)
             sys.exit()
         else:
+            Write_Log("ERROR", "Validation failed for " + Device + " and " + Trigger)
             print("Invalid Device or Trigger")
             sys.exit()
 
