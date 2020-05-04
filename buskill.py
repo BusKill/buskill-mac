@@ -32,8 +32,7 @@ def Write_Log(LEVEL, MESSAGE):
         logfile.write(str(datetime.date.today().ctime()) + " - " +  LEVEL + " - " + MESSAGE + "\n")
 
 def Find_Run_Path():
-    dirname, filename = os.path.split(os.path.abspath(__file__))
-    print(dirname)
+    dirname = os.path.split(os.path.abspath(__file__))
     full_path=dirname.split("/")
     length = len(full_path)
     del full_path[length-1]
@@ -58,11 +57,16 @@ def Validation(Device, Trigger):
         if Device.strip() == device:
             Dev = True
             break
-    if Dev != True:
-        Dev = False
+    try:
+        if Dev != True:
+            Dev = False
+            Write_Log("ERROR", Device + " was not found")
+        else:
+            Write_Log("INFO", Device + " was found")
+    except UnboundLocalError:
+        print("Device was not found.")
         Write_Log("ERROR", Device + " was not found")
-    else:
-        Write_Log("INFO", Device + " was found")
+        return
 
     return (Dev and Trig)
 
@@ -165,7 +169,7 @@ def List_Triggers():
         counter = counter + 1
         print(str(counter) + " - " + Trigger)
 
-def Query_Trigger():
+def Query_Trigger(Trigger):
     with open("Triggers/"+Trigger+"/TriggerInfo.txt") as InfoFile:
         DATA = InfoFile.read().splitlines()
         for line in DATA:

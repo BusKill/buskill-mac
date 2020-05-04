@@ -1,0 +1,7 @@
+Mon May  4 00:00:00 2020 - INFO - lock was found
+Mon May  4 00:00:00 2020 - INFO - lock was found
+Mon May  4 00:00:00 2020 - ERROR - disk2 was not found
+Mon May  4 00:00:00 2020 - INFO - lock was found
+Mon May  4 00:00:00 2020 - ERROR - disk2 was not found
+Mon May  4 00:00:00 2020 - INFO - lock was found
+Mon May  4 00:00:00 2020 - ERROR - disk2 was not found
