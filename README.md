@@ -20,3 +20,6 @@ NEW GUIDE COMING SOON
 
 The Mac Port CLI allows BusKill to be used in a lightweight and portable way 
 It does rely on machines having Python and other depenencies installed and the code will still need to be on the machine itself. However it can be ran from everywhere and requires no admin credentials so execute 
+V1.0 to support basic functionality such as the BusKill offering for mac and sinle configuration, CLI includes help files, querying Triggers as to what they do. configuration management and full log file writing to allow troubleshooting of its components and functionality. 
+
+Feature requests always welcomed, it is fully open source so you can feel free to DIY it if you so choose 
