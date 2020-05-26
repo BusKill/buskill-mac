@@ -132,18 +132,19 @@ def Clear_Config(LOG_LOCATION):
             print("Config Cleared!")
             Write_Log(LOG_LOCATION, "WARNING", "Configuration Removed")
 
-
 def Get_Devices():
-    Devices = os.listdir("/dev/")
-    Disk_Devices = []
-    for Device in Devices:
-        if fnmatch.fnmatch(Device, "*disk*"):
-            if Device.startswith("r") == False:
-                if fnmatch.fnmatch(Device, "*isk*s*") == False:
-                    if Device.endswith("1") == False:
-                        if Device.endswith("0") == False:
-                            Disk_Devices.append(Device)
-    return Disk_Devices
+    subprocess.call("ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*' > Devices.txt", shell=True)
+    Usable_Device = list()
+    with open("Devices.txt") as Devices:
+        for Device in Devices:
+            if Device.lower().__contains__("internal") == False:
+                if Device.lower().__contains__("built-in") == False:
+                    if Device.lower().__contains__("hub") == False:
+                        if Device.__contains__("IOUSBHostDevice") == False:
+                            if Device.lower().__contains__("bluetooth") == False:
+                                Usable_Device.append(Device)
+                            
+    return Usable_Device
 
 def List_Devices():
     Devices = Get_Devices()
